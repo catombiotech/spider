@@ -83,27 +83,3 @@ def get_all_seasons_stats(player_soup, address='./temp/'):
     the_data_type = ['赛季', '球队', '场次', '首发', '时间', '投篮', '命中率', '三分', '命中率', '罚球', '命中率', '篮板', '助攻', '抢断', '盖帽', '失误', '犯规', '得分']
     df = pd.DataFrame(season_data, columns=the_data_type)
     df.to_csv(address+'temp.csv', sep=',', header=True, index=True)
-
-''' 
-if __name__ == '__main__':
-    
-    NBA_url = 'https://nba.hupu.com/stats/players/'
-    NBA_soup = get_soup(NBA_url)
-    url_list = get_all_url(NBA_soup) # 获取每一个球员的url
-    
-    player_id = np.arange(1,51,1)
-    players_soup_list = [get_soup(url) for url in url_list]
-    players_name_list = [get_player_name(player_soup) for player_soup in players_soup_list]
-    
-    # 获取头像
-    try:
-        os.mkdir('./Figures/players_image')
-    except FileExistsError:
-        print('Filefold already exists!')
-        
-    images_url = [get_img_url(player_url) for player_url in url_list]
-    for i in range(len(images_url)):
-        get_image_from_url(images_url[i], 
-                  address='./Figures/players_image'+'/'+str(i+1)+'.jpg')
-    
-'''  
