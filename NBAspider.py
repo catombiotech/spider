@@ -1,17 +1,15 @@
 # basic import
 # author: 王日睿 PB19081616
 # institution: 中国科学技术大学
-# date: 2022.3.9
-# 1.0.0
+# date: 2022.4.24
+# 2.1
 # NBA-spider
 from bs4 import BeautifulSoup
-import lxml
 import requests
-from lxml import etree
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import os
+import sys 
+import io
+sys.stdout=io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
 
 def get_soup(url):
     """
@@ -35,7 +33,7 @@ def get_img_url(player_url):
     img_url = player_soup.find_all(name='div', class_='img')[0].img['src'] # get the result after some tests
     return img_url
 
-def get_image(image_url, address):
+def get_image_from_url(image_url, address='./temp/temp.jpg'):
     """
     Get images from url and save them at the input address.
     """
@@ -71,10 +69,10 @@ def get_total_ave(player_soup):
     past_data = player_soup.find_all(name='div', class_="list_table_box J_p_l",style="display: block;")
     total_ave_stats = past_data[0].find_all(name='tr')[2]
     total_ave_stats = [child.string for child in total_ave_stats.td.next_siblings]
-    total_ave_stats = total_ave_stats[1::2] # type:data_type
+    total_ave_stats = total_ave_stats[1::2] 
     return total_ave_stats
 
-def get_all_seasons_stats(player_soup,player_id,address):
+def get_all_seasons_stats(player_soup, address='./temp/'):
     past_data = player_soup.find_all(name='div', class_="list_table_box J_p_l",style="display: block;")
     season_data = []
     for season in past_data[0].find_all(name='tr')[4:]:
@@ -84,9 +82,9 @@ def get_all_seasons_stats(player_soup,player_id,address):
         season_data.append(data[1::2])
     the_data_type = ['赛季', '球队', '场次', '首发', '时间', '投篮', '命中率', '三分', '命中率', '罚球', '命中率', '篮板', '助攻', '抢断', '盖帽', '失误', '犯规', '得分']
     df = pd.DataFrame(season_data, columns=the_data_type)
-    name = get_player_name(player_soup)
-    df.to_csv(address+player_id+name+'.csv', sep=',', header=True, index=True)
-    
+    df.to_csv(address+'temp.csv', sep=',', header=True, index=True)
+
+''' 
 if __name__ == '__main__':
     
     NBA_url = 'https://nba.hupu.com/stats/players/'
@@ -99,13 +97,13 @@ if __name__ == '__main__':
     
     # 获取头像
     try:
-        os.mkdir('./players_image')
+        os.mkdir('./Figures/players_image')
     except FileExistsError:
         print('Filefold already exists!')
         
     images_url = [get_img_url(player_url) for player_url in url_list]
     for i in range(len(images_url)):
-        get_image(images_url[i], 
-                  address='./players_image'+'/'+str(player_id[i])+players_name_list[i]+'.jpg')
+        get_image_from_url(images_url[i], 
+                  address='./Figures/players_image'+'/'+str(i+1)+'.jpg')
     
-    
+'''  
